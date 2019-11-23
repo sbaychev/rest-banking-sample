@@ -7,13 +7,15 @@ import com.bank.rest.data.TransactionType;
 import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
 import com.bank.rest.repository.ITransactionRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,15 @@ public class RestApplication {
     }
 
     @Bean
+    public ObjectMapper objectMapper() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        return objectMapper;
+    }
+
+    @Bean
     @Transactional
     CommandLineRunner init(IAccountRepo iAccountRepo, ICustomerRepo iCustomerRepo, ITransactionRepo iTransactionRepo) {
 
@@ -43,13 +54,13 @@ public class RestApplication {
 
             Account account = iAccountRepo.save(Account.builder()
                 .accountBalance(new BigDecimal(10000))
-                .accountHolder(Collections.singletonList(null))
+                .accountHolder(Collections.emptySet())
                 .accountNumber("123456A")
                 .build());
 
             Account account1 = iAccountRepo.save(Account.builder()
                 .accountBalance(new BigDecimal(50000))
-                .accountHolder(Collections.singletonList(null))
+                .accountHolder(Collections.emptySet())
                 .accountNumber("123456B")
                 .build());
 
@@ -57,7 +68,7 @@ public class RestApplication {
 
             account.setAccountBalance(balance.add(BigDecimal.valueOf(10L)));
             Customer customer = Customer.builder()
-                .accounts(Arrays.asList(account, account1))
+                .accounts(new LinkedHashSet(Arrays.asList(account, account1)))
                 .firstName("John")
                 .lastName("Smith")
                 .username("jon01").build();
@@ -70,20 +81,18 @@ public class RestApplication {
                 .date(Date.valueOf(LocalDate.now()))
                 .build();
 
-            List<Transaction> transactionList = account.getTransaction() == null ? new ArrayList<>() :
+            Set<Transaction> transactionList = account.getTransaction() == null ? new LinkedHashSet<>() :
                 account.getTransaction();
             transactionList.add(transaction);
             account.setTransaction(transactionList);
             transaction.setAccount(account);
 
-            List<Transaction> transactionLis = customer.getTransaction() == null ? new ArrayList<>() :
+            Set<Transaction> transactionLis = customer.getTransaction() == null ? new LinkedHashSet<>() :
                 account.getTransaction();
             transactionLis.add(transaction);
             customer.setTransaction(transactionLis);
 
-
             iCustomerRepo.save(customer);
-
 
 //            iTransactionRepo.save(transaction);
 

@@ -1,8 +1,6 @@
 package com.bank.rest.web.utils;
 
-/**
- * Created by stefanbaychev on 3/30/17.
- */
+
 public class CoverageException extends Exception {
 
     /**

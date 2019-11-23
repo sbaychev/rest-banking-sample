@@ -4,7 +4,9 @@ import com.bank.rest.data.Customer;
 import com.bank.rest.data.Transaction;
 import java.math.BigDecimal;
 import java.util.Collection;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 public interface IAccountReadServices {
 
     BigDecimal getAccountBalance(String accountNumber);

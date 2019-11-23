@@ -7,15 +7,23 @@ import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
 import com.bank.rest.repository.ITransactionRepo;
 import com.bank.rest.services.IAccountReadServices;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountReadServiceImpl implements IAccountReadServices {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AccountReadServiceImpl.class);
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private
@@ -32,7 +40,7 @@ public class AccountReadServiceImpl implements IAccountReadServices {
 
         Account account = iAccountRepo.findByAccountNumber(accountNumber);
 
-        if(null != account) {
+        if (null != account) {
             return account.getAccountBalance();
         }
         return null;
@@ -40,7 +48,7 @@ public class AccountReadServiceImpl implements IAccountReadServices {
 
     @Override
     public Customer getAccountHolder(String username) {
-       return iCustomerRepo.findByUsername(username);
+        return iCustomerRepo.findByUsername(username);
     }
 
     @Override

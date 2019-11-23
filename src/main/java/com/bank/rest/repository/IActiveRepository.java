@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Generic repository for entities with active property.
@@ -20,6 +21,7 @@ public interface IActiveRepository<T extends AbstractEntity> extends JpaReposito
      *
      * @return found entities
      */
+    @Transactional(readOnly = true)
     @Query("from #{#entityName} t where t.isActive = 1")
     List<T> findAll();
 

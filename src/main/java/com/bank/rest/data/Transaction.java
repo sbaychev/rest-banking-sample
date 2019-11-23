@@ -1,5 +1,6 @@
 package com.bank.rest.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -20,17 +21,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Setter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true, exclude = {"customer", "account"})
 @Table(name = "transaction")
 @JsonIgnoreProperties("customer, account")
-public class Transaction extends AbstractEntity<Long> {
+public class Transaction extends DeactivatableEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
 
     @Column

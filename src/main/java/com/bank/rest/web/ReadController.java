@@ -6,7 +6,6 @@ import com.bank.rest.data.Transaction;
 import com.bank.rest.services.IAccountReadServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.math.BigDecimal;
 import java.util.Collection;
 import org.slf4j.Logger;
@@ -26,11 +25,8 @@ public class ReadController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadController.class);
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    {
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * Init binder.

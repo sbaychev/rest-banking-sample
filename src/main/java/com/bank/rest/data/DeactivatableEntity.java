@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @MappedSuperclass
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class DeactivatableEntity<T extends Serializable> extends AbstractEntity<T> {
 
     private static final long serialVersionUID = -7192085251437551090L;

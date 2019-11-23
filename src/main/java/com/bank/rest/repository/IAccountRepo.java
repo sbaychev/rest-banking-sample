@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
-import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Repository
 public interface IAccountRepo extends CrudRepository<Account, Long> {
 
     Optional<Account> findById(Long id);
@@ -32,6 +34,7 @@ public interface IAccountRepo extends CrudRepository<Account, Long> {
      * Sample method to demonstrate support for {@link Stream} as a return type with a custom query. The query is
      * executed in a streaming fashion which means that the method returns as soon as the first results are ready.
      */
+    @Transactional(readOnly = true)
     @Query("select c from Account c")
     Stream<Account> streamAllAccounts();
 

@@ -2,8 +2,8 @@ package com.bank.rest.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,13 +22,13 @@ import lombok.Setter;
 @Builder
 @Setter
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true, exclude = {"transaction", "accountHolder"})
 @Table(name = "account")
 public class Account extends DeactivatableEntity<Long> {
 
     @ManyToMany(mappedBy = "accounts", fetch = FetchType.LAZY)
     @JsonBackReference
-    private List<Customer> accountHolder;
+    private Set<Customer> accountHolder;
 
     @Column
     private String accountNumber;
@@ -38,11 +38,11 @@ public class Account extends DeactivatableEntity<Long> {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "account")
     @JsonBackReference
-    private List<Transaction> transaction;
+    private Set<Transaction> transaction;
 
     public Account() {
-        this.transaction = new ArrayList<>(1);
-        this.accountHolder = new ArrayList<>(1);
+        this.transaction = new LinkedHashSet<>(1);
+        this.accountHolder = new LinkedHashSet<>(1);
         this.accountNumber = "";
         this.accountBalance = new BigDecimal(0);
     }
