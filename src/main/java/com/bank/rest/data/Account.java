@@ -30,12 +30,13 @@ public class Account extends DeactivatableEntity<Long> {
     @JsonBackReference
     private Set<Customer> accountHolder;
 
-    @Column
+    @Column(unique = true)
     private String accountNumber;
 
     @Column
     private BigDecimal accountBalance;
 
+    //TODO: EventListener and TransactionEventListener vs cascading persistence
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "account")
     @JsonBackReference
     private Set<Transaction> transaction;

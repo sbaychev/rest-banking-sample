@@ -3,7 +3,7 @@ package com.bank.rest.web;
 import com.bank.rest.data.Account;
 import com.bank.rest.data.Customer;
 import com.bank.rest.data.Transaction;
-import com.bank.rest.services.IAccountReadServices;
+import com.bank.rest.services.IAccountReadService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -16,11 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class ReadController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadController.class);
@@ -41,7 +43,7 @@ public class ReadController {
     }
 
     @Autowired
-    IAccountReadServices iAccountReadServices;
+    IAccountReadService iAccountReadServices;
 
     @GetMapping(path = "/account-balance")
     @ResponseBody

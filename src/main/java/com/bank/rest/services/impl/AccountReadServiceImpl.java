@@ -6,7 +6,7 @@ import com.bank.rest.data.Transaction;
 import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
 import com.bank.rest.repository.ITransactionRepo;
-import com.bank.rest.services.IAccountReadServices;
+import com.bank.rest.services.IAccountReadService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountReadServiceImpl implements IAccountReadServices {
+public class AccountReadServiceImpl implements IAccountReadService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountReadServiceImpl.class);
 
@@ -35,6 +35,13 @@ public class AccountReadServiceImpl implements IAccountReadServices {
 
     @Autowired
     private ITransactionRepo iTransactionRepo;
+
+    public AccountReadServiceImpl(IAccountRepo iAccountRepo, ICustomerRepo iCustomerRepo,
+        ITransactionRepo iTransactionRepo) {
+        this.iAccountRepo = iAccountRepo;
+        this.iCustomerRepo = iCustomerRepo;
+        this.iTransactionRepo = iTransactionRepo;
+    }
 
     @Override
     public BigDecimal getAccountBalance(String accountNumber) {

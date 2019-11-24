@@ -26,7 +26,7 @@ import lombok.Setter;
 @Table(name = "customer")
 public class Customer extends DeactivatableEntity<Long> {
 
-    @Column
+    @Column(unique = true)
     private String username;
 
     @Column
@@ -39,8 +39,7 @@ public class Customer extends DeactivatableEntity<Long> {
     @JsonBackReference
     private Set<Transaction> transaction;
 
-//    @Fetch(FetchMode.JOIN)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
         name = "customer_account",
         joinColumns = @JoinColumn(name = "customer_id"),

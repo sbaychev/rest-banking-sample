@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import javax.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
@@ -54,4 +55,8 @@ public interface IAccountRepo extends JpaRepository<Account, Long> {
 
     @Async
     CompletableFuture<List<Account>> readAllBy();
+
+    @Modifying
+    @Query(value = "UPDATE Account u SET u.accountBalance = ? WHERE u.accountNumber = ?", nativeQuery = true)
+    int updateAccountSetBalanceForAccount(String balance, String accountNumber);
 }

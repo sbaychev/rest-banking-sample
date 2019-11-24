@@ -1,6 +1,7 @@
 package com.bank.rest.web;
 
-import com.bank.rest.services.IAccountWriteServices;
+import com.bank.rest.data.Customer;
+import com.bank.rest.services.IAccountWriteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.Callable;
 import javax.validation.Valid;
@@ -12,11 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class WriteController {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteController.class);
@@ -37,7 +41,7 @@ public class WriteController {
     }
 
     @Autowired
-    IAccountWriteServices iAccountWriteServices;
+    IAccountWriteService iAccountWriteServices;
 
     @PostMapping(path = "/make-payment")
     @ResponseBody
@@ -56,6 +60,16 @@ public class WriteController {
         }
 
         return () -> new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/customer")
+    public ResponseEntity<Customer> createEmployee(@RequestBody Customer customer) {
+
+        HttpStatus status = HttpStatus.CREATED;
+
+        Customer saved = iAccountWriteServices.save(customer);
+
+        return new ResponseEntity<>(saved, status);
     }
 
 //    @ResponseStatus(value = HttpStatus.BAD_REQUEST)

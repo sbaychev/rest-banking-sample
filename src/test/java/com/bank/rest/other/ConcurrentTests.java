@@ -1,13 +1,14 @@
-package com.bank.rest;
+package com.bank.rest.other;
 
+import com.bank.rest.RestApplication;
 import com.bank.rest.data.Account;
 import com.bank.rest.data.Customer;
 import com.bank.rest.data.Transaction;
 import com.bank.rest.data.TransactionType;
 import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
-import com.bank.rest.services.IAccountReadServices;
-import com.bank.rest.services.IAccountWriteServices;
+import com.bank.rest.services.IAccountReadService;
+import com.bank.rest.services.IAccountWriteService;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -16,17 +17,17 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment =
     SpringBootTest.WebEnvironment.MOCK,
     classes = RestApplication.class)
@@ -36,10 +37,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ConcurrentTests {
 
     @Autowired
-    private IAccountReadServices mockIAccountReadServices;
+    private IAccountReadService mockIAccountReadServices;
 
     @Autowired
-    private IAccountWriteServices mockIAccountWriteServices;
+    private IAccountWriteService mockIAccountWriteServices;
 
     @Autowired
     private IAccountRepo mockIAccountRepo;
@@ -94,23 +95,24 @@ public class ConcurrentTests {
 
     @Test
     public void testConcurrentReadsInReadService() throws InterruptedException {
-        TestUtil.runMultithreaded(() -> {
+        ConcurrentTestUtil.runMultithreaded(() -> {
             Customer customer = null;
             try {
                 customer = mockIAccountReadServices.getAccountHolder("jon01");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Assert.assertNotNull(customer);
+            Assertions.assertNotNull(customer);
         }, 25);
     }
 
+    //FIXME: it is concurrent in sense many threads per single container instance
     @Test
     public void testConcurrentWritesInWriteService() throws InterruptedException {
 
         AtomicInteger integer = new AtomicInteger(1);
 
-        TestUtil.runMultithreaded(() -> {
+        ConcurrentTestUtil.runMultithreaded(() -> {
             Boolean customer = Boolean.FALSE;
             try {
                 customer = mockIAccountWriteServices.performCreditOperation("123456A", "123456B",
@@ -118,7 +120,7 @@ public class ConcurrentTests {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Assert.assertTrue(customer);
+            Assertions.assertTrue(customer);
         }, 5);
     }
 }

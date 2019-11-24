@@ -1,9 +1,9 @@
-package com.bank.rest;
+package com.bank.rest.other;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class TestUtil {
+public class ConcurrentTestUtil {
 
     static void runMultithreaded(Runnable runnable, int threadCount) throws InterruptedException {
 

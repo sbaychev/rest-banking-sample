@@ -24,6 +24,7 @@ public abstract class AbstractEntity<T extends Serializable> implements Serializ
     @Setter(AccessLevel.PRIVATE)
     private T id;
 
+//    In case of Optimistic Locking
 //    @Getter
 //    @Setter(AccessLevel.PRIVATE)
 //    @Version

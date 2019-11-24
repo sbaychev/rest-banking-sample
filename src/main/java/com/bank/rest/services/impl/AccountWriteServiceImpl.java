@@ -7,7 +7,7 @@ import com.bank.rest.data.TransactionType;
 import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
 import com.bank.rest.repository.ITransactionRepo;
-import com.bank.rest.services.IAccountWriteServices;
+import com.bank.rest.services.IAccountWriteService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
@@ -24,9 +24,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 //@Scope("prototype")
-public class AccountWriteServiceImpl implements IAccountWriteServices {
+public class AccountWriteServiceImpl implements IAccountWriteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountWriteServiceImpl.class);
+
+//    @Autowired
+//    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -65,11 +68,8 @@ public class AccountWriteServiceImpl implements IAccountWriteServices {
         BigDecimal operationResult = BillingStrategy.creditStrategy().calculate(balance,
             BigDecimal.valueOf(Long.parseLong(amount)));
 
-        account.setAccountBalance(operationResult);
 
-//        account = iAccountRepo.save(account);
-
-        Transaction transaction = iTransactionRepo.saveAndFlush(Transaction.builder()
+        Transaction transaction = iTransactionRepo.save(Transaction.builder()
             .transactionType(TransactionType.CREDIT)
             .beginningAccountBalance(balance)
             .endingAccountBalance(operationResult)
@@ -77,6 +77,8 @@ public class AccountWriteServiceImpl implements IAccountWriteServices {
             .account(account)
             .date(Date.from(Instant.now()))
             .build());
+
+        account.setAccountBalance(operationResult);
 
         Set<Account> custAccs = customer.getAccounts();
         custAccs.add(account);
@@ -88,13 +90,18 @@ public class AccountWriteServiceImpl implements IAccountWriteServices {
             LOG.info(e.getMessage());
         }
 
-        return iCustomerRepo.saveAndFlush(customer) != null;
+        return true;
     }
 
     @Override
     public boolean performDebitOperation(String fromAccountNumber, String toAccountNumber, String amount,
         String customerID) {
         return false;
+    }
+
+    @Override
+    public Customer save(Customer customer) {
+        return null;
     }
 }
 

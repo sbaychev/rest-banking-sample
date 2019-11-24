@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
-public interface IAccountReadServices {
+public interface IAccountReadService {
 
     BigDecimal getAccountBalance(String accountNumber);
 
