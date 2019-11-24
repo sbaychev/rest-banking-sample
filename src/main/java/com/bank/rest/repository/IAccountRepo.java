@@ -6,35 +6,43 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
+import javax.persistence.LockModeType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface IAccountRepo extends CrudRepository<Account, Long> {
+@Transactional
+public interface IAccountRepo extends JpaRepository<Account, Long> {
 
+    @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<Account> findById(Long id);
 
+    @Lock(LockModeType.PESSIMISTIC_READ)
     Account findByAccountNumber(String accountNumber);
 
     /**
      * Saves the given {@link Account}.
      */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     <S extends Account> S save(S account);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    <S extends Account> S saveAndFlush(S account);
 
     /**
      * Sample method to derive a query from using JDK 8's {@link Optional} as return type.
      */
-    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<Account> findByAccountHolder(Customer accountHolderId);
 
     /**
      * Sample method to demonstrate support for {@link Stream} as a return type with a custom query. The query is
      * executed in a streaming fashion which means that the method returns as soon as the first results are ready.
      */
-    @Transactional(readOnly = true)
     @Query("select c from Account c")
     Stream<Account> streamAllAccounts();
 

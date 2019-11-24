@@ -52,21 +52,24 @@ public class RestApplication {
 
         return (args) -> {
 
-            Account account = iAccountRepo.save(Account.builder()
+            Account account = Account.builder()
                 .accountBalance(new BigDecimal(10000))
                 .accountHolder(Collections.emptySet())
                 .accountNumber("123456A")
-                .build());
+                .build();
 
-            Account account1 = iAccountRepo.save(Account.builder()
+            Account account1 = Account.builder()
                 .accountBalance(new BigDecimal(50000))
                 .accountHolder(Collections.emptySet())
                 .accountNumber("123456B")
-                .build());
+                .build();
 
             BigDecimal balance = account.getAccountBalance();
 
             account.setAccountBalance(balance.add(BigDecimal.valueOf(10L)));
+
+//            account = iAccountRepo.save(account);
+
             Customer customer = Customer.builder()
                 .accounts(new LinkedHashSet(Arrays.asList(account, account1)))
                 .firstName("John")

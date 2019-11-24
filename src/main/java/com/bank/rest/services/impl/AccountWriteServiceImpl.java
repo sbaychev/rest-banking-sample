@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+//@Scope("prototype")
 public class AccountWriteServiceImpl implements IAccountWriteServices {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccountWriteServiceImpl.class);
@@ -66,7 +67,9 @@ public class AccountWriteServiceImpl implements IAccountWriteServices {
 
         account.setAccountBalance(operationResult);
 
-        Transaction transaction = iTransactionRepo.save(Transaction.builder()
+//        account = iAccountRepo.save(account);
+
+        Transaction transaction = iTransactionRepo.saveAndFlush(Transaction.builder()
             .transactionType(TransactionType.CREDIT)
             .beginningAccountBalance(balance)
             .endingAccountBalance(operationResult)
@@ -85,7 +88,7 @@ public class AccountWriteServiceImpl implements IAccountWriteServices {
             LOG.info(e.getMessage());
         }
 
-        return iCustomerRepo.save(customer) != null;
+        return iCustomerRepo.saveAndFlush(customer) != null;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.bank.rest.repository.IAccountRepo;
 import com.bank.rest.repository.ICustomerRepo;
 import com.bank.rest.repository.ITransactionRepo;
 import com.bank.rest.services.IAccountReadServices;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -48,7 +49,12 @@ public class AccountReadServiceImpl implements IAccountReadServices {
 
     @Override
     public Customer getAccountHolder(String username) {
-        return iCustomerRepo.findByUsername(username);
+        Customer customer = iCustomerRepo.findByUsername(username);
+        try {
+            LOG.info(objectMapper.writeValueAsString(customer));
+        } catch (JsonProcessingException e) {
+        }
+        return customer;
     }
 
     @Override

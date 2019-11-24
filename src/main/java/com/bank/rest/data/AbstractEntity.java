@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,8 +24,9 @@ public abstract class AbstractEntity<T extends Serializable> implements Serializ
     @Setter(AccessLevel.PRIVATE)
     private T id;
 
-    @Getter
-    @Setter(AccessLevel.PRIVATE)
-    @Version
-    private T version;
+//    @Getter
+//    @Setter(AccessLevel.PRIVATE)
+//    @Version
+//    @Column(name = "version")
+//    private T version;
 }

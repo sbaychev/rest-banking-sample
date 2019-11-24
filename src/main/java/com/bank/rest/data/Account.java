@@ -36,7 +36,7 @@ public class Account extends DeactivatableEntity<Long> {
     @Column
     private BigDecimal accountBalance;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE}, mappedBy = "account")
     @JsonBackReference
     private Set<Transaction> transaction;
 
